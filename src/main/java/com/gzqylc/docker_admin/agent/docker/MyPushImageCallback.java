@@ -4,12 +4,12 @@ import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.model.PushResponseItem;
 import com.gzqylc.docker_admin.agent.RemoteLogger;
 
-public class PushImageCallback extends ResultCallbackTemplate<PushImageCallback, PushResponseItem> {
+public class MyPushImageCallback extends ResultCallbackTemplate<MyPushImageCallback, PushResponseItem> {
 
     private RemoteLogger logger;
     private String error;
 
-    public PushImageCallback(RemoteLogger logger) {
+    public MyPushImageCallback(RemoteLogger logger) {
         this.logger = logger;
     }
 

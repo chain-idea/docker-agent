@@ -9,7 +9,7 @@ import com.gzqylc.docker_admin.agent.RemoteLogger;
 import java.util.concurrent.TimeUnit;
 
 
-public class BuildImageResultCallback extends ResultCallbackTemplate<BuildImageResultCallback, BuildResponseItem> {
+public class MyBuildImageResultCallback extends ResultCallbackTemplate<MyBuildImageResultCallback, BuildResponseItem> {
 
     private String imageId;
 
@@ -17,7 +17,7 @@ public class BuildImageResultCallback extends ResultCallbackTemplate<BuildImageR
 
     private RemoteLogger logger;
 
-    public BuildImageResultCallback(RemoteLogger logger) {
+    public MyBuildImageResultCallback(RemoteLogger logger) {
         this.logger = logger;
     }
 

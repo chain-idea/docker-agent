@@ -2,11 +2,11 @@ package com.gzqylc.docker_admin.agent;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
-import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.google.common.collect.Sets;
 import com.gzqylc.docker_admin.agent.docker.DockerTool;
-import com.gzqylc.docker_admin.agent.docker.PushImageCallback;
+import com.gzqylc.docker_admin.agent.docker.MyBuildImageResultCallback;
+import com.gzqylc.docker_admin.agent.docker.MyPushImageCallback;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -72,20 +72,21 @@ public class BuildImageController {
 
 
         File buildDir = new File(workDir, form.buildContext);
-
+        RemoteLogger logger = RemoteLogger.getLogger(form.getLogUrl());
 
         BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(buildDir).withTags(tags);
         buildImageCmd.withNoCache(false);
 
         log.info("向docker发送构建指令");
-        String imageId = buildImageCmd.exec(new BuildImageResultCallback()).awaitImageId();
+        String imageId = buildImageCmd.exec(new MyBuildImageResultCallback(logger)).awaitImageId();
         log.info("镜像构建结束 imageId={}", imageId);
 
         // 推送
         log.info("推送镜像");
         for (String tag : tags) {
             PushImageCmd pushImageCmd = dockerClient.pushImageCmd(tag);
-            pushImageCmd.exec(new PushImageCallback(RemoteLogger.getLogger(form.getLogUrl()))).awaitCompletion();
+
+            pushImageCmd.exec(new MyPushImageCallback(logger)).awaitCompletion();
         }
 
         dockerClient.close();
