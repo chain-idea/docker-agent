@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 
+import java.nio.charset.StandardCharsets;
+
 @Slf4j
 public class RemoteLogger {
     String logUrl;
@@ -82,7 +84,7 @@ public class RemoteLogger {
 
         // TODO 优化
         try {
-            HttpRequest.post(logUrl).send(msg).body();
+            HttpRequest.post(logUrl).send(msg.getBytes(StandardCharsets.UTF_8)).body();
         } catch (Exception e) {
             e.printStackTrace();
         }
