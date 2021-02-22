@@ -11,8 +11,8 @@ RUN mvn -q -DskipTests=true package \
         && mv target/*.jar /app.jar \
         && cd / && rm -rf /tmp/build
 
-FROM openjdk:8
+FROM openjdk:8-alpine
 COPY --from=0 /app.jar /app.jar
 
-EXPOSE 8080
+EXPOSE 33433
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Duser.timezone=Asia/Shanghai","-jar","/app.jar"]
