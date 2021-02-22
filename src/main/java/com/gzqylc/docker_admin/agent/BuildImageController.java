@@ -23,13 +23,18 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
-@RequestMapping("/agent/build")
+@RequestMapping("agent")
 @Controller
 @Slf4j
 public class BuildImageController {
 
-
     @RequestMapping
+    public String index() {
+        return "docker-admin-agent";
+    }
+
+
+    @RequestMapping("build")
     public void buildImage(@RequestBody BuildImageForm form) throws GitAPIException, IOException, InterruptedException {
         log.info("开始构建镜像任务开始");
 
