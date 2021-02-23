@@ -22,6 +22,7 @@ public class BootApplication {
         DockerTool.getClient().pingCmd().exec();
 
         String os = System.getProperty("os.name");
+        log.info("操作系统为:{}", os);
         if (os.contains("linux")) {
             File dockerSock = new File("/var/run/docker.sock");
 
