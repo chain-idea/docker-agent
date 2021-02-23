@@ -84,7 +84,7 @@ public class RemoteLogger {
 
         // TODO 优化
         try {
-            HttpRequest.post(logUrl).send(msg.getBytes(StandardCharsets.UTF_8)).body();
+            HttpRequest.post(logUrl).send(msg).body();
         } catch (Exception e) {
             e.printStackTrace();
         }
