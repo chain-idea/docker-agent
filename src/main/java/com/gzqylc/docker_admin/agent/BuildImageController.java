@@ -45,6 +45,7 @@ public class BuildImageController {
         String regPassword;
         String imageUrl;
         String buildContext;
-        String logUrl;
+        String logHook;
+        String resultHook;
     }
 }

@@ -3,6 +3,7 @@ package com.gzqylc.docker_admin.agent;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.PushImageCmd;
+import com.github.kevinsawicki.http.HttpRequest;
 import com.google.common.collect.Sets;
 import com.gzqylc.docker_admin.agent.docker.DockerTool;
 import com.gzqylc.docker_admin.agent.docker.MyBuildImageResultCallback;
@@ -26,7 +27,7 @@ public class BuildService {
 
     @Async
     public void buildImage(BuildImageController.BuildImageForm form) throws GitAPIException, IOException, InterruptedException {
-        RemoteLogger log = RemoteLogger.getLogger(form.getLogUrl());
+        RemoteLogger log = RemoteLogger.getLogger(form.getLogHook());
 
         log.info("开始构建镜像任务开始");
 
@@ -85,5 +86,10 @@ public class BuildService {
 
 
         log.info("构建阶段结束");
+
+        String notifyUrl = form.getResultHook() + "/" + true;
+
+        String body = HttpRequest.get(notifyUrl).body();
+
     }
 }
