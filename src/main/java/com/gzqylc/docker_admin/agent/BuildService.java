@@ -7,7 +7,6 @@ import com.google.common.collect.Sets;
 import com.gzqylc.docker_admin.agent.docker.DockerTool;
 import com.gzqylc.docker_admin.agent.docker.MyBuildImageResultCallback;
 import com.gzqylc.docker_admin.agent.docker.MyPushImageCallback;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -15,21 +14,20 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
-@Slf4j
 @Service
 public class BuildService {
 
 
     @Async
     public void buildImage(BuildImageController.BuildImageForm form) throws GitAPIException, IOException, InterruptedException {
+        RemoteLogger log = RemoteLogger.getLogger(form.getLogUrl());
+
         log.info("开始构建镜像任务开始");
 
         // 获取代码
@@ -66,13 +64,13 @@ public class BuildService {
 
 
         File buildDir = new File(workDir, form.buildContext);
-        RemoteLogger logger = RemoteLogger.getLogger(form.getLogUrl());
+
 
         BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(buildDir).withTags(tags);
         buildImageCmd.withNoCache(false);
 
         log.info("向docker发送构建指令");
-        String imageId = buildImageCmd.exec(new MyBuildImageResultCallback(logger)).awaitImageId();
+        String imageId = buildImageCmd.exec(new MyBuildImageResultCallback(log)).awaitImageId();
         log.info("镜像构建结束 imageId={}", imageId);
 
         // 推送
@@ -80,7 +78,7 @@ public class BuildService {
         for (String tag : tags) {
             PushImageCmd pushImageCmd = dockerClient.pushImageCmd(tag);
 
-            pushImageCmd.exec(new MyPushImageCallback(logger)).awaitCompletion();
+            pushImageCmd.exec(new MyPushImageCallback(log)).awaitCompletion();
         }
 
         dockerClient.close();
