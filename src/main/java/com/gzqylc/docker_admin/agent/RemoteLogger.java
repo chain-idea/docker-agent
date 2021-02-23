@@ -4,9 +4,6 @@ import com.github.dockerjava.api.model.ResponseItem;
 import com.github.kevinsawicki.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class RemoteLogger {
