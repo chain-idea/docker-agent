@@ -77,9 +77,6 @@ public class RemoteLogger {
         }
 
 
-        String time = DateFormatUtils.format(System.currentTimeMillis(), "HH:mm:ss");
-        msg = time + "  " + msg;
-
         log.info(msg);
 
         // TODO 优化
