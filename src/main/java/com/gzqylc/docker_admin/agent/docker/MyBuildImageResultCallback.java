@@ -26,6 +26,7 @@ public class MyBuildImageResultCallback extends ResultCallbackTemplate<MyBuildIm
         if (item.isBuildSuccessIndicated()) {
             this.imageId = item.getImageId();
         } else if (item.isErrorIndicated()) {
+            logger.info("异常 {}", item.getError());
             this.error = item.getError();
         }
 
