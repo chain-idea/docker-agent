@@ -21,7 +21,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         DockerTool.getClient().pingCmd().exec();
 
-        String os = System.getProperty("os.name");
+        String os = System.getProperty("os.name").toLowerCase();
         log.info("操作系统为:{}", os);
         if (os.contains("linux")) {
             File dockerSock = new File("/var/run/docker.sock");
