@@ -4,15 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ReflogEntry;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.springframework.util.Assert;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 
 @Slf4j
 public class GitTool {
@@ -21,7 +16,9 @@ public class GitTool {
     public static void clone(String url, String user, String password, String value, File workDir) throws GitAPIException {
         long start = System.currentTimeMillis();
 
-        boolean isCommitRef = value.length() == 40;
+        boolean isCommitId = value.length() == 40;
+
+        log.info("是否commitId {}", isCommitId);
 
         log.info("工作目录为 {}", workDir.getAbsolutePath());
         log.info("获取代码 git clone {}", url);
@@ -33,18 +30,23 @@ public class GitTool {
 
         CloneCommand cloneCommand = Git.cloneRepository().setURI(url).setCredentialsProvider(provider).setDirectory(workDir);
 
-        if (!isCommitRef) {
+        if (!isCommitId) {
             cloneCommand.setBranch(value);
         }
         Git git = cloneCommand.call();
 
-        if (isCommitRef) {
+        if (isCommitId) {
             git.reset().setRef(value).call();
         }
 
         git.close();
-        log.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
 
+        log.info("文件列表:");
+        for (String f : workDir.list()) {
+            log.info(f);
+        }
+
+        log.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
         log.info("耗时：{} 秒", (System.currentTimeMillis() - start) / 1000);
     }
 
