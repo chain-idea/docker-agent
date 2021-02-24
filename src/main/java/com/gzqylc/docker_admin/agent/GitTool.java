@@ -15,12 +15,17 @@ public class GitTool {
 
     public static void clone(String url, String user, String password, String value, File workDir) throws GitAPIException {
         long start = System.currentTimeMillis();
+        log.info("工作目录为 {}", workDir.getAbsolutePath());
 
+        log.info("克隆的分支、标签、commit {}", value);
         boolean isCommitId = value.length() == 40;
 
         log.info("是否commitId {}", isCommitId);
 
-        log.info("工作目录为 {}", workDir.getAbsolutePath());
+
+
+
+
         log.info("获取代码 git clone {}", url);
         UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(user, password);
 
