@@ -6,9 +6,11 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
+import java.util.Collection;
 
 @Slf4j
 public class GitTool {
@@ -22,7 +24,6 @@ public class GitTool {
         boolean isCommitId = value.length() == 40;
 
         log.info("是否commitId {}", isCommitId);
-
 
         log.info("获取代码 git clone {}", url);
         UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(user, password);
@@ -54,12 +55,22 @@ public class GitTool {
         log.info("耗时：{} 秒", (System.currentTimeMillis() - start) / 1000);
     }
 
+
+    public static void getLog(String url, String user, String password, String value) throws GitAPIException {
+        UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(user, password);
+
+        Collection<Ref> call = Git.lsRemoteRepository().setRemote(url).setCredentialsProvider(provider).call();
+
+        System.out.println(call);
+    }
+
+
     public static void main(String[] args) throws GitAPIException {
-        clone("http://www.gzqylc.com:7000/jiangtao/test2.git",
+        getLog("http://www.gzqylc.com:7000/jiangtao/test2.git",
                 "jiangtao",
                 "kimi_kissme",
-                "a0266e7de165d2aa600e74e62036bb4c6dbf82ba",
-                new File("d:/test2/fb"));
+                "a0266e7de165d2aa600e74e62036bb4c6dbf82ba"
+        );
     }
 
 }
