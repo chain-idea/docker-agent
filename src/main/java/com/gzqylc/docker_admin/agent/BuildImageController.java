@@ -25,14 +25,11 @@ public class BuildImageController {
     }
 
 
-
-
     @RequestMapping("build")
     public String buildImage(@RequestBody BuildImageForm form) throws GitAPIException, IOException, InterruptedException {
         buildService.buildImage(form);
         return "正在执行命令";
     }
-
 
     @Data
     public static class BuildImageForm {

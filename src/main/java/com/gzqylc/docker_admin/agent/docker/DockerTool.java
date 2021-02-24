@@ -17,10 +17,15 @@ public class DockerTool {
     }
 
     public static DockerClient getClient(String registryUrl, String registryUsername, String registryPassword) {
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean isWin = os.contains("win");
+        String dockerHost = isWin ? "tcp://localhost:2375" : "unix:///var/run/docker.sock";
+
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withRegistryUsername(registryUsername)
                 .withRegistryPassword(registryPassword)
                 .withRegistryUrl(registryUrl)
+                .withDockerHost(dockerHost)
                 .build();
 
         DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()

@@ -29,35 +29,12 @@ public class BuildService {
     public void buildImage(BuildImageController.BuildImageForm form) {
         RemoteLogger log = RemoteLogger.getLogger(form.getLogHook());
         try {
-
-
             log.info("开始构建镜像任务开始");
 
             // 获取代码
             File workDir = new File("/tmp/" + UUID.randomUUID());
-            log.info("工作目录为 {}", workDir.getAbsolutePath());
-            log.info("获取代码 git clone {}", form.gitUrl);
+            GitTool.clone(form.getGitUrl(), form.getGitUsername(), form.getGitPassword(), form.getBranch(), workDir);
 
-            UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(form.gitUsername, form.gitPassword);
-
-            if (workDir.exists()) {
-                boolean delete = workDir.delete();
-                Assert.state(delete, "删除文件失败");
-            }
-
-            Git git = Git.cloneRepository()
-                    .setURI(form.gitUrl)
-                    .setNoTags()
-                    .setCredentialsProvider(provider)
-                    .setDirectory(workDir)
-                    .call();
-
-            String commitMsg = git.log().call().iterator().next().getFullMessage();
-            log.info("git log : {}", commitMsg);
-            git.close();
-
-
-            log.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
 
             log.info("连接构建主机容器引擎中...");
             DockerClient dockerClient = DockerTool.getClient(form.regHost, form.regUsername, form.regPassword);

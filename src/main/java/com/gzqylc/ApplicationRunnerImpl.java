@@ -19,11 +19,12 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        DockerTool.getClient().pingCmd().exec();
 
+        DockerTool.getClient().pingCmd().exec();
         String os = System.getProperty("os.name").toLowerCase();
         log.info("操作系统为:{}", os);
         if (os.contains("linux")) {
+
             File dockerSock = new File("/var/run/docker.sock");
 
             Assert.state(dockerSock.exists(), "文件" + dockerSock.getPath() + "不存在,如果本软件运行于docker中，请映射该文件");
