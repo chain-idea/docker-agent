@@ -44,5 +44,6 @@ public class BuildImageController {
         String buildContext;
         String logHook;
         String resultHook;
+        String dockerfile;
     }
 }

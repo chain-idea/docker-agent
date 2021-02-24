@@ -45,13 +45,14 @@ public class BuildService {
             File buildDir = new File(workDir, form.buildContext);
 
 
-            BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(buildDir).withTags(tags);
-            buildImageCmd.withNoCache(false);
-
             log.info("向docker发送构建指令");
             MyBuildImageResultCallback buildCallback = new MyBuildImageResultCallback(log);
-            String imageId = buildImageCmd.exec(buildCallback).awaitImageId();
-            log.info("镜像构建结束 imageId={}", imageId);
+            dockerClient.buildImageCmd(buildDir)
+                    .withTags(tags)
+                    .withNoCache(false)
+                    .withDockerfilePath(form.dockerfile)
+                    .exec(buildCallback).awaitImageId();
+            log.info("镜像构建结束 ");
 
             // 推送
             log.info("推送镜像");
