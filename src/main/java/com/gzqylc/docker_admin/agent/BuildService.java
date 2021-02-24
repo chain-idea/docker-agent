@@ -38,9 +38,8 @@ public class BuildService {
 
             log.info("连接构建主机容器引擎中...");
             DockerClient dockerClient = DockerTool.getClient(form.regHost, form.regUsername, form.regPassword);
-            String latestTag = form.imageUrl + ":latest";
             String commitTag = form.imageUrl + ":" + form.branch;
-            Set<String> tags = Sets.newHashSet(latestTag, commitTag);
+            Set<String> tags = Sets.newHashSet(commitTag);
 
 
             File buildDir = new File(workDir, form.buildContext);
